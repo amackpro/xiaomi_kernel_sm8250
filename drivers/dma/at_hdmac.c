@@ -1684,7 +1684,8 @@ static struct dma_chan *at_dma_xlate(struct of_phandle_args *dma_spec,
 	dma_cap_set(DMA_SLAVE, mask);
 
 	atslave = kmalloc(sizeof(*atslave), GFP_KERNEL);
-	if (!atslave)
+	if (!atslave) {
+		put_device(&dmac_pdev->dev);
 		return NULL;
 	}
 
@@ -1717,7 +1718,6 @@ static struct dma_chan *at_dma_xlate(struct of_phandle_args *dma_spec,
 	chan = dma_request_channel(mask, at_dma_filter, atslave);
 	if (!chan) {
 		put_device(&dmac_pdev->dev);
-		kfree(atslave);
 		return NULL;
 	}
 
