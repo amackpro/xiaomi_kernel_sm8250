@@ -622,7 +622,6 @@ static struct module *find_module_all(const char *name, size_t len,
 
 struct module *find_module(const char *name)
 {
-	module_assert_mutex();
 	return find_module_all(name, strlen(name), false);
 }
 EXPORT_SYMBOL_GPL(find_module);
@@ -4198,8 +4197,11 @@ int module_kallsyms_on_each_symbol(int (*fn)(void *, const char *,
 				 mod, kallsyms->symtab[i].st_value);
 			if (ret != 0)
 				break;
+<<<<<<< HEAD
 
 			cond_resched();
+=======
+>>>>>>> ba5a4fcad8a0... BACKPORT: kallsyms: refactor {,module_}kallsyms_on_each_symbol
 		}
 	}
 	mutex_unlock(&module_mutex);

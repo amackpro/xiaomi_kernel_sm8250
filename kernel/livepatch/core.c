@@ -167,7 +167,11 @@ static int klp_find_object_symbol(const char *objname, const char *name,
 	if (objname)
 		module_kallsyms_on_each_symbol(klp_find_callback, &args);
 	else
+<<<<<<< HEAD
 		kallsyms_on_each_match_symbol(klp_match_callback, name, &args);
+=======
+		kallsyms_on_each_symbol(klp_find_callback, &args);
+>>>>>>> ba5a4fcad8a0... BACKPORT: kallsyms: refactor {,module_}kallsyms_on_each_symbol
 
 	/*
 	 * Ensure an address was found. If sympos is 0, ensure symbol is unique;
