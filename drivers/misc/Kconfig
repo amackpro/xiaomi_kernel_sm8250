@@ -702,6 +702,6 @@ config OKL4_LINK_SHBUF
 
 config GPIO_TESTING_MODE
 	tristate "A simple GPIO testing mode driver"
-	default n
+	default y if BOARD_XIAOMI
 	help
 	  Enable driver for a simple testing mode detection
