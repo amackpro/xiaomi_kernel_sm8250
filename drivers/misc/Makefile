@@ -80,7 +80,7 @@ obj-$(CONFIG_PERF_HELPER)	+= perf_helper.o
 obj-$(CONFIG_GPIO_TESTING_MODE)	+= gpio-testing-mode.o
 
 obj-$(CONFIG_DRV8846)	+=drv8846.o
-obj-$(CONFIG_AKM09970)	+=akm09970.o
+obj-$(CONFIG_HALL_AKM09970)	+=akm09970.o
 
 obj-$(CONFIG_FPR_FPC)		+= fpr_FingerprintCard/
 obj-$(CONFIG_GPIO_TESTING_MODE)	+= gpio-testing-mode.o
