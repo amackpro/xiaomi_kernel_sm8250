@@ -952,6 +952,7 @@ gen_headers_out_arm64 = [
     "linux/drv8846.h",
     "linux/millet.h",
     "linux/akm09970.h",
+    "linux/drv8846.h",
 
     // From arch/arm64/include/uapi/**/*.h
 
