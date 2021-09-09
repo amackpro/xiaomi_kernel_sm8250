@@ -6,8 +6,8 @@
 #include <linux/seq_file.h>
 #include <linux/printk.h>
 
-#define MAX_RECORD_NUM		2048
-#define MAX_ONE_RECORD_SIZE	128
+#define MAX_RECORD_NUM 2048
+#define MAX_ONE_RECORD_SIZE 128
 
 static DEFINE_SPINLOCK(plr_lock);
 struct perflock_records_buff {
@@ -57,24 +57,32 @@ static int perflock_records_show(struct seq_file *seq, void *v)
 	if (plr_num < MAX_RECORD_NUM) {
 		for (i = 0; i < plr_num; i++) {
 			rtc_time_to_tm(plr_buff[i].key_time.tv_sec, &tm);
-			seq_printf(seq, "%d-%02d-%02d %02d:%02d:%02d UTC { %s }\n",
-					tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec,
-					plr_buff[i].msg);
+			seq_printf(seq,
+				   "%d-%02d-%02d %02d:%02d:%02d UTC { %s }\n",
+				   tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
+				   tm.tm_hour, tm.tm_min, tm.tm_sec,
+				   plr_buff[i].msg);
 		}
 	} else {
 		for (i = index_head; i < MAX_RECORD_NUM; i++) {
 			rtc_time_to_tm(plr_buff[i].key_time.tv_sec, &tm);
-			seq_printf(seq, "%d-%02d-%02d %02d:%02d:%02d UTC { %s }\n",
-					tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec,
-					plr_buff[i].msg);
+			seq_printf(seq,
+				   "%d-%02d-%02d %02d:%02d:%02d UTC { %s }\n",
+				   tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
+				   tm.tm_hour, tm.tm_min, tm.tm_sec,
+				   plr_buff[i].msg);
 		}
 
 		if (index_head > index_tail) {
 			for (i = 0; i <= index_tail; i++) {
-				rtc_time_to_tm(plr_buff[i].key_time.tv_sec, &tm);
-				seq_printf(seq, "%d-%02d-%02d %02d:%02d:%02d UTC { %s }\n",
-						tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec,
-						plr_buff[i].msg);
+				rtc_time_to_tm(plr_buff[i].key_time.tv_sec,
+					       &tm);
+				seq_printf(
+					seq,
+					"%d-%02d-%02d %02d:%02d:%02d UTC { %s }\n",
+					tm.tm_year + 1900, tm.tm_mon + 1,
+					tm.tm_mday, tm.tm_hour, tm.tm_min,
+					tm.tm_sec, plr_buff[i].msg);
 			}
 		}
 	}
@@ -88,10 +96,11 @@ static int perflock_records_open(struct inode *inode, struct file *file)
 	return single_open(file, perflock_records_show, NULL);
 }
 
-static ssize_t perflock_records_write(struct file *file, const char __user *userbuf,
-		size_t count, loff_t *data)
+static ssize_t perflock_records_write(struct file *file,
+				      const char __user *userbuf, size_t count,
+				      loff_t *data)
 {
-	char buf[MAX_ONE_RECORD_SIZE] = {0};
+	char buf[MAX_ONE_RECORD_SIZE] = { 0 };
 
 	if (count > MAX_ONE_RECORD_SIZE)
 		return -EINVAL;
@@ -105,20 +114,21 @@ static ssize_t perflock_records_write(struct file *file, const char __user *user
 }
 
 static const struct file_operations perflock_records_ops = {
-	.open           = perflock_records_open,
-	.read           = seq_read,
-	.write		= perflock_records_write,
-	.llseek         = seq_lseek,
-	.release        = single_release,
+	.open = perflock_records_open,
+	.read = seq_read,
+	.write = perflock_records_write,
+	.llseek = seq_lseek,
+	.release = single_release,
 };
 
 static int __init perf_helper_init(void)
 {
 	struct proc_dir_entry *entry;
 
-	entry = proc_create("perflock_records", 0664, NULL, &perflock_records_ops);
+	entry = proc_create("perflock_records", 0664, NULL,
+			    &perflock_records_ops);
 	if (!entry)
-		printk(KERN_ERR "%s: create perflock_records node failed\n");
+		pr_err("%s: create perflock_records node failed\n");
 
 	return 0;
 }

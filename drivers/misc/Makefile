@@ -83,7 +83,4 @@ obj-$(CONFIG_MOTOR_DRV8846)	+=drv8846.o
 obj-$(CONFIG_HALL_AKM09970)	+=akm09970.o
 
 obj-$(CONFIG_FPR_FPC)		+= fpr_FingerprintCard/
-obj-$(CONFIG_GPIO_TESTING_MODE)	+= gpio-testing-mode.o
-
-obj-y	+= qrc/
 obj-$(CONFIG_KINECTICS_XR_NORDIC)	+= kxrctrl/
