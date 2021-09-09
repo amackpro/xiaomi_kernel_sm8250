@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  * Copyright (c) 2016-2017, 2020, The Linux Foundation. All rights reserved.
+ * Copyright (C) 2021 XiaoMi, Inc.
  */
 
 #define pr_fmt(fmt) "I2C PMIC: %s: " fmt, __func__
@@ -494,6 +495,7 @@ static int i2c_pmic_read(struct regmap *map, unsigned int reg, void *val,
 		rc = regmap_bulk_read(map, reg, val, val_count);
 	} while (rc == -ENOTCONN && retries++ < MAX_I2C_RETRIES);
 #endif
+
 	if (retries > 1)
 		pr_err("i2c_pmic_read failed for %d retries, rc = %d\n",
 			retries - 1, rc);

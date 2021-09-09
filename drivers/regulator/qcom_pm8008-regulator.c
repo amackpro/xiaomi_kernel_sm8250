@@ -79,6 +79,10 @@ enum pmic_subtype {
 	PM8010_SUBTYPE,
 };
 
+#ifdef CONFIG_I2C_RETRY
+#define MAX_RETRY_TIME			5
+#endif
+
 struct pm8008_chip {
 	struct device		*dev;
 	struct regmap		*regmap;
