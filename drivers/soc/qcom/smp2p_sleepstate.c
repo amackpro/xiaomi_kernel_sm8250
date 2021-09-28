@@ -13,7 +13,7 @@
 #include <linux/pm_wakeup.h>
 
 #define PROC_AWAKE_ID 12 /* 12th bit */
-#define SMP2P_SLEEPSTATE_TIME 100
+#define SMP2P_SLEEPSTATE_TIME CONFIG_SMP2P_SLEEPSTATE_TIME
 #define AWAKE_BIT BIT(PROC_AWAKE_ID)
 static struct qcom_smem_state *state;
 static struct wakeup_source *notify_ws;
