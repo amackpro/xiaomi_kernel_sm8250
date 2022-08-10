@@ -2305,6 +2305,7 @@ static ssize_t aw869x_file_write(struct file *filp, const char *buff,
 	ret = copy_from_user(pbuff, buff, len);
 	if (ret) {
 		aw_err("%s: copy from user fail\n", __func__);
+		kfree(pbuff);
 		return len;
 	}
 
