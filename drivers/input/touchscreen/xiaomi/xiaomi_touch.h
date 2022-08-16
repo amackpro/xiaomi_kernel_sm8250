@@ -66,8 +66,11 @@ do { \
 		pr_err(fmt, ##args); \
 } while (0)
 
-
-#define XIAOMI_ROI	1
+#ifdef CONFIG_MIHW
+#define XIAOMI_ROI 1
+#else
+#define XIAOMI_ROI 0
+#endif
 
 #if XIAOMI_ROI
 #define DIFF_SENSE_NODE 7
