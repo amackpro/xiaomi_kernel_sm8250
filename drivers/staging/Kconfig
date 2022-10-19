@@ -128,6 +128,8 @@ source "drivers/staging/gasket/Kconfig"
 
 source "drivers/staging/axis-fifo/Kconfig"
 
+source "drivers/staging/qcacld-3.0/Kconfig"
+
 source "drivers/staging/misysinfofreader/Kconfig"
 
 source "drivers/staging/kperfevents/Kconfig"
