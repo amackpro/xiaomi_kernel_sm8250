@@ -4895,17 +4895,6 @@ __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
 	duration = current->stime - start_time;
 	spent_duration = ktime_get_ns() - start_uptime;
 
-	if (unlikely(is_above_kperfevents_threshold_nanos(spent_duration))) {
-#ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
-		trace_kperfevents_mm_slowpath(order, duration, spent_duration);
-#else
-		/* The difference between start_time and end_time are jiffies. For e.g.
-		 * duration * (NSEC_PER_SEC / HZ)
-		 */
-		trace_kperfevents_mm_slowpath(order, ((duration << 30) / HZ), spent_duration);
-#endif
-	}
-
 out:
 	if (memcg_kmem_enabled() && (gfp_mask & __GFP_ACCOUNT) && page &&
 	    unlikely(memcg_kmem_charge(page, gfp_mask, order) != 0)) {

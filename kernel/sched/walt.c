@@ -1816,6 +1816,21 @@ account_busy_for_task_demand(struct rq *rq, struct task_struct *p, int event)
 	return __account_busy_for_task_demand(rq, p, event, SCHED_ACCOUNT_WAIT_TIME);
 }
 
+#ifdef CONFIG_PACKAGE_RUNTIME_INFO
+static int
+account_pkg_busy_time(struct rq *rq, struct task_struct *p, int event)
+{
+	if (is_idle_task(p)) {
+		if (event == PICK_NEXT_TASK)
+			return 0;
+
+		return 1;
+	}
+
+	return __account_busy_for_task_demand(rq, p, event, false);
+}
+#endif
+
 unsigned int sysctl_sched_task_unfilter_period = 200000000;
 
 /*
@@ -2131,6 +2146,23 @@ void update_task_ravg(struct task_struct *p, struct rq *rq, int event,
 	update_task_demand(p, rq, event, wallclock);
 	update_cpu_busy_time(p, rq, event, wallclock, irqtime);
 	update_task_pred_demand(rq, p, event);
+
+#ifdef CONFIG_PACKAGE_RUNTIME_INFO
+	if (pkg_enable()) {
+		int fstat = 0;
+		u64 delta = 0;
+		int pkg_task_busy = account_pkg_busy_time(rq, p, event);
+		if (pkg_task_busy) {
+			fstat |= PKG_TASK_BUSY;
+			if (is_idle_task(p))
+				delta = irqtime;
+			else
+				delta = wallclock - p->ravg.mark_start;
+			delta = scale_exec_time(delta, rq);
+			update_pkg_load(p, rq->cpu, fstat, wallclock, delta);
+		}
+	}
+#endif
 
 	if (exiting_task(p))
 		goto done;
@@ -3468,7 +3500,12 @@ void walt_irq_work(struct irq_work *irq_work)
 							&asym_cap_sibling_cpus))
 				flag |= SCHED_CPUFREQ_INTERCLUSTER_MIG;
 
+#ifdef CONFIG_PACKAGE_RUNTIME_INFO
+			if ((!is_migration && !is_asym_migration)
+				&& glk_enable()) {
+#else
 			if (!is_migration && !is_asym_migration) {
+#endif
 				cpufreq_update_util(cpu_rq(cpu), flag |
 						SCHED_CPUFREQ_CONTINUE);
 				i++;

@@ -215,13 +215,13 @@ static void sched_boost_disable_all(void)
 
 static void _sched_set_boost(int type)
 {
-
-	if (MI_BOOST == type) {
+	if (type == MI_BOOST) {
 		type = FULL_THROTTLE_BOOST;
 		mi_sched_boost = MI_BOOST;
-	}else if(FULL_THROTTLE_BOOST + type == NO_BOOST){
+	} else if (FULL_THROTTLE_BOOST + type == NO_BOOST){
 		mi_sched_boost = NO_BOOST;
 	}
+
 	if (type == 0)
 		sched_boost_disable_all();
 	else if (type > 0)
@@ -242,7 +242,8 @@ static void _sched_set_boost(int type)
 	trace_sched_set_boost(sysctl_sched_boost);
 }
 
-static void sched_set_boost_top_app(int type) {
+static void sched_set_boost_top_app(int type)
+{
 	sysctl_sched_boost_top_app = type;
 }
 

@@ -63,6 +63,9 @@
 #include <linux/mutex.h>
 #include <linux/cgroup.h>
 #include <linux/wait.h>
+#ifdef CONFIG_PACKAGE_RUNTIME_INFO
+#include <linux/pkg_stat.h>
+#endif
 
 DEFINE_STATIC_KEY_FALSE(cpusets_pre_enable_key);
 DEFINE_STATIC_KEY_FALSE(cpusets_enabled_key);
@@ -2129,7 +2132,16 @@ static void cpuset_fork(struct task_struct *task)
 {
 	if (task_css_is_root(task, cpuset_cgrp_id))
 		return;
+
+#ifdef CONFIG_PACKAGE_RUNTIME_INFO
+	if (current->pkg.migt.flag & MINOR_TASK)
+		set_cpus_allowed_ptr(task, &current->pkg.migt.cpus_allowed);
+	else
+		set_cpus_allowed_ptr(task, &current->cpus_allowed);
+#else
 	set_cpus_allowed_ptr(task, &current->cpus_allowed);
+#endif
+
 	task->mems_allowed = current->mems_allowed;
 }
 
@@ -2474,14 +2486,14 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
 }
 
 /**
-*Allows the child process of the RT or other threads whose affinity has been
-*modified to inherit the affinity of its scheduling group.
-**/
+ * Allows the child process of the RT or other threads whose affinity has been
+ * modified to inherit the affinity of its scheduling group.
+ **/
 void cpuset_cpus_allowed_mi(struct task_struct *tsk)
 {
-    rcu_read_lock();
-    sched_setaffinity(tsk->pid,task_cs(tsk)->cpus_allowed);
-    rcu_read_unlock();
+	rcu_read_lock();
+	sched_setaffinity(tsk->pid, task_cs(tsk)->cpus_allowed);
+	rcu_read_unlock();
 }
 
 /**

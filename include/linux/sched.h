@@ -29,6 +29,9 @@
 #include <linux/mm_event.h>
 #include <linux/task_io_accounting.h>
 #include <linux/rseq.h>
+#ifdef CONFIG_PACKAGE_RUNTIME_INFO
+#include <linux/pkg_stat.h>
+#endif
 
 /* task_struct member predeclarations (sorted alphabetically): */
 struct audit_context;
@@ -1496,18 +1499,12 @@ struct task_struct {
 	void				*security;
 #endif
 
-#ifdef CONFIG_KPERFEVENTS
-	/* lock to protect kperfevents */
-	rwlock_t kperfevents_lock;
-	/* perfevents of current task, only effective for group leader.
-	 * accessible for all tasks in one group.
-	 */
-	void *kperfevents;
-#endif
-
 	/* task is frozen/stopped (used by the cgroup freezer) */
 	ANDROID_KABI_USE(1, unsigned frozen:1);
 
+#ifdef CONFIG_PACKAGE_RUNTIME_INFO
+struct package_runtime_info pkg;
+#endif
 	/*
 	 * New fields for task_struct should be added above here, so that
 	 * they are included in the randomized portion of task_struct.

@@ -1419,9 +1419,6 @@ update_stats_enqueue_wakeup(struct rq *rq, struct task_struct *p)
 
 		account_scheduler_latency(p, delta >> 10, 1);
 		trace_sched_stat_sleep(p, delta);
-		if (unlikely(is_above_kperfevents_threshold_nanos(delta))) {
-			trace_kperfevents_sched_wait(p, delta, true);
-		}
 	}
 	if (se->statistics.block_start) {
 		u64 delta = rq_clock(rq) - se->statistics.block_start;
@@ -1443,9 +1440,6 @@ update_stats_enqueue_wakeup(struct rq *rq, struct task_struct *p)
 		account_scheduler_latency(p, delta >> 10, 0);
 		trace_sched_stat_blocked(p, delta);
 		trace_sched_blocked_reason(p);
-		if (unlikely(is_above_kperfevents_threshold_nanos(delta))) {
-			trace_kperfevents_sched_wait(p, delta, false);
-		}
 	}
 #endif
 }

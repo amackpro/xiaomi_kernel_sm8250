@@ -140,7 +140,7 @@ struct millet_data {
 
 };
 
-struct millet_userconf{
+struct millet_userconf {
 	enum MILLET_TYPE owner;
 	enum MSG_TYPE msg_type;
 	unsigned long src_port;

@@ -223,11 +223,11 @@ void __delayacct_binder_start(void)
 void __delayacct_binder_end(void)
 {
 	if (ktime_get_ns() != current->delays->binder_start)
-	delayacct_end_binder(
-		&current->delays->lock,
-		&current->delays->binder_start,
-		&current->delays->binder_delay,
-		&current->delays->binder_count);
+		delayacct_end_binder(
+			&current->delays->lock,
+			&current->delays->binder_start,
+			&current->delays->binder_delay,
+			&current->delays->binder_count);
 }
 
 void __delayacct_slowpath_start(void)
