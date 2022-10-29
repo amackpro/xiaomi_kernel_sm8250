@@ -102,8 +102,21 @@ config LOCALVERSION
 config MIHW
 	bool "MI driver"
 	default n
+	select BINDER_OPT
+	select CAM_RECLAIM
+	select LAST_TOUCH_EVENTS
+	select MI_FRAGMENTION
+	select MIGT
+	select MILLET
+	select MIGT_ENERGY_MODEL
+	select PACKAGE_RUNTIME_INFO
+	select PERF_CRITICAL_RT_TASK
+	select PERF_HELPER
+	select PERF_HUMANTASK
+	select SF_BINDER
+	select TASK_DELAY_ACCT
 	help
-	  Mi driver code
+	  Enables XiaoMi MIUI user experience optimization driver code
 
 config PACKAGE_RUNTIME_INFO
 	bool "stat:package runtime info on cluster"
