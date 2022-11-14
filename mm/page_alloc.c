@@ -76,12 +76,6 @@
 #include <asm/div64.h>
 #include "internal.h"
 
-#include <linux/kperfevents.h>
-#undef CREATE_TRACE_POINTS
-#include <trace/events/kperfevents_mm.h>
-#define CREATE_TRACE_POINTS
-DEFINE_TRACE(kperfevents_mm_slowpath);
-
 /* prevent >1 _updater_ of zone percpu pageset ->high and ->batch fields */
 static DEFINE_MUTEX(pcp_batch_high_lock);
 #define MIN_PERCPU_PAGELIST_FRACTION	(8)
