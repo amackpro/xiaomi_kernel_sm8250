@@ -31,7 +31,6 @@ DEVICE="munch"
 # Set our directory
 OUT_DIR=out/
 
-# Select LTO or non LTO builds
 if [[ "$@" =~ "aosp" ]]; then
     VERSION="OOF-${DEVICE^^}-AOSP-${DATE}"
     if [[ "$@" =~ "aospa"* ]]; then
@@ -62,26 +61,6 @@ CROSS_COMPILE_COMPAT=arm-linux-gnueabi- \
 
 dts_source=arch/arm64/boot/dts/vendor/qcom
 
-function enable_lto() {
-    scripts/config --file ${OUT_DIR}/.config \
-        -e LTO_CLANG
-
-    # Make olddefconfig
-    cd ${OUT_DIR} || exit
-    make -j${KEBABS} ${ARGS} olddefconfig
-    cd ../ || exit
-}
-
-function disable_lto() {
-    scripts/config --file ${OUT_DIR}/.config \
-        -d LTO_CLANG
-
-    # Make olddefconfig
-    cd ${OUT_DIR} || exit
-    make -j${KEBABS} ${ARGS} olddefconfig
-    cd ../ || exit
-}
-
 START=$(date +"%s")
 
 # Set compiler Path
@@ -90,11 +69,6 @@ export LD_LIBRARY_PATH=${HOME}/tc/proton-clang/lib64:$LD_LIBRARY_PATH
 
 # Make defconfig
 make -j${KEBABS} ${ARGS} vendor/"${DEVICE}"_user_defconfig
-
-# Enable LTO
-if [[ "$@" =~ "lto"* ]]; then
-    enable_lto
-fi
 
 if [[ "$@" =~ "aosp"* ]]; then
 	if [[ "$@" =~ "aospa"* ]];then
@@ -108,11 +82,6 @@ fi
 
 # Make defconfig
 make -j${KEBABS} ${ARGS} vendor/"${DEVICE}"_user_defconfig
-
-# FIXME: disable LTO on MIUI
-if [[ "$@" =~ "lto"* ]]; then
-    disable_lto
-fi
 
 if [[ "$@" =~ "aosp"* ]]; then
 scripts/config --file out/.config	\
