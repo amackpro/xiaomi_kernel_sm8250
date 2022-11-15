@@ -31,12 +31,15 @@ DEVICE="munch"
 # Set our directory
 OUT_DIR=out/
 
-if [[ "$@" =~ "aosp" ]]; then
-    VERSION="OOF-${DEVICE^^}-AOSP-${DATE}"
-    if [[ "$@" =~ "aospa"* ]]; then
+if [[ "$1" == "aosp" ]]; then
+	VERSION="OOF-${DEVICE^^}-AOSP-${DATE}"
+fi
+
+if [[ "$1" == "aospa" ]]; then
 	VERSION="OOF-${DEVICE^^}-AOSPA-${DATE}"
-    fi
-else
+fi
+
+if [[ $1 == "" || $1 == "miui" ]]; then
     VERSION="OOF-${DEVICE^^}-MIUI-${DATE}"
 fi
 
@@ -70,20 +73,21 @@ export LD_LIBRARY_PATH=${HOME}/tc/proton-clang/lib64:$LD_LIBRARY_PATH
 # Make defconfig
 make -j${KEBABS} ${ARGS} vendor/"${DEVICE}"_user_defconfig
 
-if [[ "$@" =~ "aosp"* ]]; then
-	if [[ "$@" =~ "aospa"* ]];then
-		echo "------ Starting AOSPA Build ------"
-	else
-		echo "------ Starting AOSP Build ------"
-	fi
-else
+if [[ "$1" == "aosp" ]]; then
+	echo "------ Starting AOSP Build ------"
+fi
+if [[ "$1" == "aospa" ]]; then
+	echo "------ Starting AOSPA Build ------"
+fi
+
+if [[ $1 == "" || $1 == "miui" ]]; then
 	echo "------ Starting MIUI Build ------"
 fi
 
 # Make defconfig
 make -j${KEBABS} ${ARGS} vendor/"${DEVICE}"_user_defconfig
 
-if [[ "$@" =~ "aosp"* ]]; then
+if [[ "$1" =~ "aosp"* ]]; then
 scripts/config --file out/.config	\
     -e LOCALVERSION_AUTO	\
     -e TOUCHSCREEN_COMMON	\
@@ -103,12 +107,13 @@ scripts/config --file out/.config	\
     -d SF_BINDER	\
     -d TASK_DELAY_ACCT
 
-    if [[ "$@" =~ "aospa"* ]]; then
+    if [[ "$1" == "aospa" ]]; then
 	scripts/config --file out/.config	\
 	-d SDCARD_FS	\
 	-e UNICODE
+	sed -i "/FORTIFY_SOURCE/d" out/.config
     fi
-    sed -i "/FORTIFY_SOURCE/d" out/.config
+
     sed -i 's/<1546>/<155>/g' ${dts_source}/dsi-panel-l11r-38-08-0a-dsc-cmd.dtsi
     sed -i 's/<695>/<70>/g' ${dts_source}/dsi-panel-l11r-38-08-0a-dsc-cmd.dtsi
 fi
@@ -123,13 +128,14 @@ make -j${KEBABS} ${ARGS} CC="ccache clang" HOSTCC="ccache gcc" HOSTCXX="ccache g
 find ${OUT_DIR}/$dts_source -name '*.dtb' -exec cat {} + >${OUT_DIR}/arch/arm64/boot/dtb
 git checkout arch/arm64/boot/dts/vendor &>/dev/null
 
-if [[ "$@" =~ "aosp"* ]]; then
-        if [[ "$@" =~ "aospa"* ]];then
-                echo "------ Finishing AOSPA Build ------"
-        else
+if [[ "$1" =~ "aosp"* ]]; then
+	if [[ "$1" == "aospa" ]]; then
+		echo "------ Finishing AOSPA Build ------"
+	else
 		echo "------ Finishing AOSP Build ------"
 	fi
-else
+fi
+if [[ "$1" == "" || "$1" == "miui" ]]; then
 	echo "------ Finishing MIUI Build ------"
 fi
 
