@@ -89,16 +89,17 @@ scripts/config --file out/.config	\
     -e TOUCHSCREEN_COMMON	\
     --set-str STATIC_USERMODEHELPER_PATH /system/bin/micd	\
     -d IPC_LOGGING	\
-    -d KPERFEVENTS	\
     -d MIGT	\
     -d MIHW	\
     -d MILLET	\
     -d MIGT_ENERGY_MODEL	\
     -d MIUI_ZRAM_MEMORY_TRACKING	\
-    -d MI_RECLAIM	\
     -d PACKAGE_RUNTIME_INFO	\
     -d PERF_HUMANTASK	\
     -d PERF_CRITICAL_RT_TASK	\
+    -d PERF_HELPER	\
+    -d RTMM	\
+    -d MI_FRAGMENTION	\
     -d SF_BINDER	\
     -d TASK_DELAY_ACCT
 

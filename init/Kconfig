@@ -103,6 +103,7 @@ config MIHW
 	bool "XiaoMi kernel optimization"
 	default n
 	select BINDER_OPT
+	select IPC_LOGGING
 	select MIGT
 	select MILLET
 	select MIGT_ENERGY_MODEL
@@ -110,6 +111,8 @@ config MIHW
 	select PERF_CRITICAL_RT_TASK
 	select PERF_HELPER
 	select PERF_HUMANTASK
+	select MI_FRAGMENTION
+	select MIUI_ZRAM_MEMORY_TRACKING
 	select RTMM
 	select SF_BINDER
 	select TASK_DELAY_ACCT
@@ -118,6 +121,7 @@ config MIHW
 
 config PACKAGE_RUNTIME_INFO
 	bool "stat:package runtime info on cluster"
+	depends on MIHW
 	default n
 	help
 	  This option can show package runtime info in sup/big/little core.
