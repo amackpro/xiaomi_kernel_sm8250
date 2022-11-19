@@ -3024,6 +3024,11 @@ static int dwc3_gadget_ep_cleanup_completed_request(struct dwc3_ep *dep,
 				status);
 
 	req->request.actual = req->request.length - req->remaining;
+	if (!dwc3_gadget_ep_request_completed(req))
+		goto out;
+
+	if (req->needs_extra_trb) {
+		unsigned int maxp = usb_endpoint_maxp(dep->endpoint.desc);
 
 	if (!dwc3_gadget_ep_request_completed(req))
 		goto out;
