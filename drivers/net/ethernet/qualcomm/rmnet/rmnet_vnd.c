@@ -289,8 +289,6 @@ static void rmnet_get_ethtool_stats(struct net_device *dev,
 	struct rmnet_port_priv_stats *stp;
 	struct rmnet_port *port;
 
-	port = rmnet_get_port(priv->real_dev);
-
 	if (!data || !port)
 		return;
 
@@ -308,7 +306,6 @@ static int rmnet_stats_reset(struct net_device *dev)
 	struct rmnet_priv_stats *st;
 	struct rmnet_port *port;
 
-	port = rmnet_get_port(priv->real_dev);
 	if (!port)
 		return -EINVAL;
 
