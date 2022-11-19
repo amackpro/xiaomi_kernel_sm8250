@@ -125,8 +125,9 @@ cd ../ || exit
 
 make -j${KEBABS} ${ARGS} CC="ccache clang" HOSTCC="ccache gcc" HOSTCXX="ccache g++" 2>&1 | tee build.log
 
-find ${OUT_DIR}/$dts_source -name '*.dtb' -exec cat {} + >${OUT_DIR}/arch/arm64/boot/dtb
-git checkout arch/arm64/boot/dts/vendor &>/dev/null
+if [[ "$1" =~ "aosp"* ]]; then
+	git checkout arch/arm64/boot/dts/vendor &>/dev/null
+fi
 
 if [[ "$1" =~ "aosp"* ]]; then
 	if [[ "$1" == "aospa" ]]; then
@@ -135,6 +136,7 @@ if [[ "$1" =~ "aosp"* ]]; then
 		echo "------ Finishing AOSP Build ------"
 	fi
 fi
+
 if [[ "$1" == "" || "$1" == "miui" ]]; then
 	echo "------ Finishing MIUI Build ------"
 fi
@@ -142,7 +144,7 @@ fi
 END=$(date +"%s")
 DIFF=$((END - START))
 zipname="$VERSION.zip"
-if [ -f "out/arch/arm64/boot/Image" ] && [ -f "out/arch/arm64/boot/dtbo.img" ]; then
+if [ -f "out/arch/arm64/boot/Image" ] && [ -f "out/arch/arm64/boot/dtbo.img" ] && [ -f "out/arch/arm64/boot/dtb" ]; then
 	git clone -q https://github.com/amackpro/AnyKernel3 -b munch
 	cp out/arch/arm64/boot/Image AnyKernel3
 	cp out/arch/arm64/boot/dtb AnyKernel3
